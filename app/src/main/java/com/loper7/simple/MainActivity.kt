@@ -49,11 +49,14 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.hjq.permissions.Permission
 import com.hjq.permissions.XXPermissions
+import com.loper7.miit_rule_checker.MIITMethodCountChecker
 import com.loper7.miit_rule_checker.MIITMethods
 import com.loper7.miit_rule_checker.MIITRuleChecker
 import com.loper7.simple.ui.theme.MiitrulecheckerTheme
 import com.loper7.simple.widget.TopAppBar
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import java.lang.reflect.Member
 import java.net.NetworkInterface
 
 class MainActivity : ComponentActivity() {
@@ -67,13 +70,16 @@ class MainActivity : ComponentActivity() {
                 Surface(color = MaterialTheme.colorScheme.background) {
                     MainPage()
                 }
+                GlobalScope
             }
         }
 
         //检查单个方法
 //        MIITRuleChecker.check(MIITMethods.LocationManager.getLastKnownLocation)
         //检查内置的方法
-        MIITRuleChecker.checkDefaults()
+//        MIITRuleChecker.checkDefaults()
+        //开始计数
+        MIITMethodCountChecker.startCount(MIITMethods.getDefaultMethods(), 20 * 1000)
     }
 }
 
