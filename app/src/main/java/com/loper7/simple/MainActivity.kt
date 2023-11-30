@@ -77,9 +77,14 @@ class MainActivity : ComponentActivity() {
         //检查单个方法
 //        MIITRuleChecker.check(MIITMethods.LocationManager.getLastKnownLocation)
         //检查内置的方法
-//        MIITRuleChecker.checkDefaults()
+        MIITRuleChecker.checkDefaults()
         //开始计数
-        MIITMethodCountChecker.startCount(MIITMethods.getDefaultMethods(), 20 * 1000)
+//        var list = mutableListOf<Member?>().apply {
+//            add(MIITMethods.LocationManager.getLastKnownLocation)
+//            add(MIITMethods.LocationManager.requestLocationUpdates)
+//            add(MIITMethods.Secure.getString)
+//        }
+//        MIITMethodCountChecker.startCount(list , 20 * 1000)
     }
 }
 

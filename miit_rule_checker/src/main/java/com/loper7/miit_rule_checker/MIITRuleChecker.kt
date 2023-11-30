@@ -62,9 +62,13 @@ object MIITRuleChecker {
             try {
                 //单独判断获取androidId的情况
                 if (callFrame.method.name == "getString" && Settings.Secure.ANDROID_ID != (callFrame.args[1] as String)) return
-                LogHelper.printHookedMethod(callFrame)
+                if (callFrame.method.name == "getString" && Settings.Secure.ANDROID_ID == (callFrame.args[1] as String)) {
+                    LogHelper.printHookedMethod("${callFrame.method.name} - ${Settings.Secure.ANDROID_ID}")
+                } else {
+                    LogHelper.printHookedMethod(callFrame.method.name)
+                }
             } catch (_ : Throwable) {
-                LogHelper.printHookedMethod(callFrame)
+                LogHelper.printHookedMethod(callFrame.method.name)
             }
         }
     }

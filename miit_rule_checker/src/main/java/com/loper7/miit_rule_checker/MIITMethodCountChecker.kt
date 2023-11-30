@@ -2,6 +2,7 @@ package com.loper7.miit_rule_checker
 
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import top.canyie.pine.Pine
 import top.canyie.pine.callback.MethodHook
 import java.lang.reflect.Member
@@ -32,10 +33,14 @@ object MIITMethodCountChecker {
                     override fun beforeCall(callFrame : Pine.CallFrame?) {
                         super.beforeCall(callFrame)
                         val methodName = callFrame?.method?.name ?: return
-                        addCount(methodName)
+                        try {
+                            addCount("$methodName - ${(callFrame.args[1] as String)}")
+                        } catch (_ : Throwable) {
+                            addCount(methodName)
+                        }
                     }
                 })
-            }catch (_:Exception){
+            } catch (_ : Exception) {
 
             }
         }

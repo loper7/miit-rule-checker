@@ -16,10 +16,10 @@ object LogHelper {
     fun e(message : String?) = Log.e(TAG , message ?: "")
 
 
-    fun printHookedMethod(callFrame : Pine.CallFrame) {
+    fun printHookedMethod(name : String) {
         Log.w(TAG , "----------------------${TAG}----------------------")
         Log.w(TAG , "*****Method call detected*****")
-        Log.w(TAG , "    ${callFrame.method.name}")
+        Log.w(TAG , "    ${name}")
         Log.w(TAG , "******************************")
         Log.w(TAG , "Stack information:")
         Log.w(TAG , getMethodStack())
