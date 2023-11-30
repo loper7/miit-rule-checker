@@ -62,8 +62,9 @@ dependencies {
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.18.0")
 
     api("top.canyie.pine:core:0.2.6")
-    implementation(project(mapOf("path" to ":miit_rule_checker")))
+//    implementation(project(mapOf("path" to ":miit_rule_checker")))
 
     api("com.github.getActivity:XXPermissions:18.5")
+    api("io.github.loper7:miit-rule-checker:0.1.0")
 
 }

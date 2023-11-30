@@ -2,6 +2,8 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
 }
+// 必须在 android 上面
+apply("../publish-mavencentral.gradle")
 
 android {
     namespace = "com.loper7.miit_rule_checker"

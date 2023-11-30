@@ -1,0 +1,140 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+// 此处不需修改，下面会读取 local.properties 中配置的信息
+ext["PUBLISH_VERSION"] = '' //发布的版本
+ext["PUBLISH_GROUP_ID"] = ''  //分组ID
+ext["PUBLISH_ARTIFACT_ID"] = '' //
+ext["signing.keyId"] = '' //签名的密钥后8位
+ext["signing.password"] = ''  //签名设置的密码
+ext["signing.secretKeyRingFile"] = '' //生成的secring.gpg文件目录
+ext["ossrhUsername"] = ''  //sonatype用户名
+ext["ossrhPassword"] = ''  //sonatype密码
+// 遍历赋值
+File secretPropsFile = project.rootProject.file('local.properties')
+if (secretPropsFile.exists()) {
+    println "Found secret props file, loading props"
+    Properties p = new Properties()
+    p.load(new FileInputStream(secretPropsFile))
+    p.each { name, value ->
+        ext[name] = value
+    }
+} else {
+    println "No props file, loading env vars"
+}
+
+afterEvaluate {
+    publishing {
+        repositories {
+            maven {
+                //推送至远端的中央仓库，一旦发布release中央仓库版本，旧版本无法修改
+                //一般都在  暂存库  中进行测试，然后确认无误后再发布到 release中央仓库
+                allowInsecureProtocol = false
+                name = PUBLISH_ARTIFACT_ID
+                // 暂存库
+                def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+                // 快照库（版本名以 SNAPSHOT 结尾，就推送至快照库）
+                def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+                url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+                credentials {
+                    username ossrhUsername
+                    password ossrhPassword
+                }
+            }
+            maven {
+                // 推送至本地存储库，本机测试的时候可以用
+                allowInsecureProtocol = false
+                name = 'Local'
+                url = uri('../ZrgkLocalRepo')
+            }
+        }
+        publications {
+            release(MavenPublication) {
+                println("publish-maven Log-------> PUBLISH_GROUP_ID: $PUBLISH_GROUP_ID; PUBLISH_ARTIFACT_ID: $PUBLISH_ARTIFACT_ID; PUBLISH_VERSION: $PUBLISH_VERSION")
+
+                groupId PUBLISH_GROUP_ID
+                artifactId PUBLISH_ARTIFACT_ID
+                version PUBLISH_VERSION
+
+                artifact("$buildDir/outputs/aar/miit_rule_checker-release.aar")
+
+                // 如果需要将源代码一起打包进aar，就打开此注释。
+                //artifact androidSourcesJar
+
+                pom {
+                    name = PUBLISH_ARTIFACT_ID
+                    description = 'android 合规检查器' //项目描述
+                    url = 'https://github.com/loper7/miit-rule-checker' //项目github链接
+                    licenses {
+                        license {
+                            //协议类型，一般默认Apache License2.0的话不用改：
+                            name = 'The Apache License, Version 2.0'
+                            url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        }
+                    }
+                    developers {
+                        developer {
+                            // 修改自己对应的用户名、邮箱
+                            id = 'loper7' //你的sonatype用户名
+                            name = 'loper7' //你的sonatype用户名
+                            email = 'loper7@gmail.com' //你的sonatype注册邮箱
+                        }
+                    }
+                    // Version control info, if you're using GitHub, follow the format as seen here
+                    scm {
+                        //修改成你的Git地址：
+                        connection = 'scm:git@github.com:loper7/miit-rule-checker.git'
+                        developerConnection = 'scm:git@github.com:loper7/miit-rule-checker.git'
+                        //分支地址：
+                        url = 'https://github.com/loper7/miit-rule-checker'
+                    }
+
+                    withXml {
+                        def dependenciesNode = asNode().appendNode("dependencies")
+                        configurations.implementation.allDependencies.forEach() {
+                            Dependency dependency ->
+                                if (dependency.version != "unspecified" && dependency.name != "unspecified") {
+                                    def dependencyNode = dependenciesNode.appendNode('dependency')
+                                    dependencyNode.appendNode('groupId', dependency.group)
+                                    dependencyNode.appendNode('artifactId', dependency.name)
+                                    dependencyNode.appendNode('version', dependency.version)
+                                }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    signing {
+        sign publishing.publications
+    }
+}
+
+// 生成文档注释
+task androidJavadocs(type: Javadoc) {
+    // 设置源码所在的位置
+    source = android.sourceSets.main.java.srcDirs
+}
+
+// 将文档打包成jar,生成javadoc.jar
+task androidJavadocsJar(type: Jar) {
+    // 指定文档名称
+    archiveClassifier.set('javadoc')
+    from androidJavadocs.destinationDir
+}
+
+// 将源码打包 ，生成sources.jar
+task androidSourcesJar(type: Jar) {
+    archiveClassifier.set('sources')
+    from android.sourceSets.main.java.srcDirs
+
+    exclude "**/R.class"
+    exclude "**/BuildConfig.class"
+}
+
+//配置需要上传到maven仓库的文件
+artifacts {
+    archives androidSourcesJar //将源码打包进aar,这样使用方可以看到方法注释.
+    archives androidJavadocsJar //将注释打包进aar
+}
