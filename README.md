@@ -20,7 +20,7 @@ Step 2. 添加 `Gradle` 依赖
 ```
 dependencies {
     ...
-    implementation 'io.github.loper7:miit-rule-checker:0.1.0'
+    implementation 'io.github.loper7:miit-rule-checker:0.1.1'
 }
 ```
 ## 如何使用
