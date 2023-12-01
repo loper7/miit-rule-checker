@@ -60,7 +60,7 @@ afterEvaluate {
                 artifact("$buildDir/outputs/aar/miit_rule_checker-release.aar")
 
                 // 如果需要将源代码一起打包进aar，就打开此注释。
-                //artifact androidSourcesJar
+                artifact androidSourcesJar
 
                 pom {
                     name = PUBLISH_ARTIFACT_ID

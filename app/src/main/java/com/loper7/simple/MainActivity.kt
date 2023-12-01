@@ -46,11 +46,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.hjq.permissions.XXPermissions
+import com.loper7.miit_rule_checker.MIITMethodCountChecker
 import com.loper7.miit_rule_checker.MIITMethods
 import com.loper7.miit_rule_checker.MIITRuleChecker
 import com.loper7.simple.ui.theme.MiitrulecheckerTheme
 import com.loper7.simple.widget.TopAppBar
 import kotlinx.coroutines.launch
+import java.lang.reflect.Member
 import java.net.NetworkInterface
 
 class MainActivity : ComponentActivity() {
@@ -68,16 +70,21 @@ class MainActivity : ComponentActivity() {
         }
 
         //检查单个方法
-//        MIITRuleChecker.check(MIITMethods.LocationManager.getLastKnownLocation)
+        MIITRuleChecker.check(MIITMethods.WifiInfo.getMacAddress)
         //检查内置的方法
         MIITRuleChecker.checkDefaults()
+
+//        val list = MIITMethods.getDefaultMethods()
+//        list.add(MainActivity::class.java.getDeclaredMethod("onCreate" , Bundle::class.java))
+//        MIITRuleChecker.check(list)
         //开始计数
-//        var list = mutableListOf<Member?>().apply {
-//            add(MIITMethods.LocationManager.getLastKnownLocation)
-//            add(MIITMethods.LocationManager.requestLocationUpdates)
-//            add(MIITMethods.Secure.getString)
-//        }
-//        MIITMethodCountChecker.startCount(list , 20 * 1000)
+        val list = mutableListOf<Member?>().apply {
+            add(MIITMethods.LocationManager.getLastKnownLocation)
+            add(MIITMethods.LocationManager.requestLocationUpdates)
+            add(MIITMethods.Secure.getString)
+        }
+        MIITMethodCountChecker.startCount(list , 20 * 1000)
+        MIITMethodCountChecker.startCount(MIITMethods.LocationManager.getLastKnownLocation , deadline = 20 * 1000)
     }
 }
 
