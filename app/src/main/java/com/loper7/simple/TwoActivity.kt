@@ -47,16 +47,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import com.hjq.permissions.XXPermissions
-import com.loper7.miit_rule_checker.MIITMethodCountChecker
 import com.loper7.miit_rule_checker.MIITMethods
-import com.loper7.miit_rule_checker.MIITRuleChecker
 import com.loper7.simple.ui.theme.MiitrulecheckerTheme
 import com.loper7.simple.widget.TopAppBar
 import kotlinx.coroutines.launch
-import java.lang.reflect.Member
 import java.net.NetworkInterface
 
-class MainActivity : ComponentActivity() {
+class TwoActivity : ComponentActivity() {
 
     @SuppressLint("HardwareIds")
     override fun onCreate(savedInstanceState : Bundle?) {
@@ -65,34 +62,18 @@ class MainActivity : ComponentActivity() {
         setContent {
             MiitrulecheckerTheme {
                 Surface(color = MaterialTheme.colorScheme.background) {
-                    MainPage()
+                    TwoPage()
                 }
             }
         }
-
-        //检查单个方法
-//        MIITRuleChecker.check(MIITMethods.WifiInfo.getMacAddress)
-        //检查内置的方法
-//        MIITRuleChecker.checkDefaults()
-
-//        val list = MIITMethods.getDefaultMethods()
-//        list.add(MainActivity::class.java.getDeclaredMethod("onCreate" , Bundle::class.java))
-//        MIITRuleChecker.check(list)
-        //开始计数
-        val list = mutableListOf<Member?>().apply {
-            add(MIITMethods.LocationManager.getLastKnownLocation)
-            add(MIITMethods.LocationManager.requestLocationUpdates)
-            add(MIITMethods.Secure.getString)
-        }
-//        MIITMethodCountChecker.startCount(MIITMethods.getPackageManagerAll() , 20 * 1000)
-//        MIITMethodCountChecker.startCount(MIITMethods.LocationManager.getLastKnownLocation , deadline = 20 * 1000)
     }
 }
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter" , "HardwareIds" , "QueryPermissionsNeeded")
 @Composable
-fun MainPage() {
+fun TwoPage() {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -254,37 +235,6 @@ fun MainPage() {
         }
     }
 }
-
-@Composable
-fun Item(text : String , clickable : (() -> Unit)?) {
-    Column(modifier = Modifier
-        .background(color = Color.White)
-        .clickable {
-            clickable?.invoke()
-        }) {
-        Text(text = text , fontSize = 16.sp , fontWeight = FontWeight.W400 , modifier = Modifier.padding(all = 16.dp))
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .height(0.5.dp)
-            .padding(start = 16.dp)) {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight()
-                .background(Color.LightGray))
-        }
-    }
-}
-
-@Preview
-@Composable
-fun PreviewGreeting() {
-    MiitrulecheckerTheme {
-        Surface(color = MaterialTheme.colorScheme.background) {
-            MainPage()
-        }
-    }
-}
-
 @SuppressLint("MissingPermission")
 private fun getLastKnownLocation(context : Context) {
     val locationManager by lazy { context.getSystemService(Context.LOCATION_SERVICE) as LocationManager }
@@ -391,3 +341,4 @@ private fun requestPermissions(context : Context , vararg permissions : String ,
         }
     }
 }
+

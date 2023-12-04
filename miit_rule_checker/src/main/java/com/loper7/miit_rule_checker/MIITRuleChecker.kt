@@ -2,6 +2,7 @@ package com.loper7.miit_rule_checker
 
 import android.provider.Settings
 import android.text.TextUtils
+import android.util.Log
 import top.canyie.pine.Pine
 import top.canyie.pine.callback.MethodHook
 import java.lang.reflect.Member
@@ -59,16 +60,18 @@ object MIITRuleChecker {
         @Throws(Throwable::class)
         override fun beforeCall(callFrame : Pine.CallFrame) {
             super.beforeCall(callFrame)
+
+            val name = LogHelper.getMethodName(callFrame)
             try {
                 //单独判断获取androidId的情况
                 if (callFrame.method.name == "getString" && Settings.Secure.ANDROID_ID != (callFrame.args[1] as String)) return
                 if (callFrame.method.name == "getString" && Settings.Secure.ANDROID_ID == (callFrame.args[1] as String)) {
-                    LogHelper.printHookedMethod("${callFrame.method.name} - ${Settings.Secure.ANDROID_ID}")
+                    LogHelper.printHookedMethod("$name - ${Settings.Secure.ANDROID_ID}")
                 } else {
-                    LogHelper.printHookedMethod(callFrame.method.name)
+                    LogHelper.printHookedMethod(name)
                 }
             } catch (_ : Throwable) {
-                LogHelper.printHookedMethod(callFrame.method.name)
+                LogHelper.printHookedMethod(name)
             }
         }
     }

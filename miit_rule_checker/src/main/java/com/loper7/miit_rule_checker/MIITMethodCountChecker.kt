@@ -3,6 +3,7 @@ package com.loper7.miit_rule_checker
 import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import top.canyie.pine.Pine
 import top.canyie.pine.callback.MethodHook
 import java.lang.reflect.Member
@@ -27,14 +28,13 @@ object MIITMethodCountChecker {
         map.clear()
         for (member in members) {
             if (member == null) continue
-            addCount(member.name)
             try {
                 Pine.hook(member , object : MethodHook() {
                     override fun beforeCall(callFrame : Pine.CallFrame?) {
                         super.beforeCall(callFrame)
-                        val methodName = callFrame?.method?.name ?: return
+                        val methodName = LogHelper.getMethodName(callFrame)
                         try {
-                            addCount("$methodName - ${(callFrame.args[1] as String)}")
+                            addCount("$methodName - ${(callFrame !!.args[1] as String)}")
                         } catch (_ : Throwable) {
                             addCount(methodName)
                         }
@@ -64,8 +64,9 @@ object MIITMethodCountChecker {
         if (count != - 1) {
             map[method]?.put(stackClassName , ++ count)
         } else {
-            val hasMap = hashMapOf<String , Int>()
-            hasMap[stackClassName] = 0
+            var hasMap = map[method]
+            if (hasMap == null) hasMap = hashMapOf()
+            hasMap[stackClassName] = 1
             map[method] = hasMap
         }
     }

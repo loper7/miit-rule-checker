@@ -34,18 +34,39 @@ object MIITMethods {
             TelephonyManager.getImeiWithInt ,
             TelephonyManager.getSubscriberId)
     }
+
+
+    fun getPackageManagerAll() : MutableList<Member?> {
+        return mutableListOf(WifiInfo.getMacAddress ,
+            ApplicationPackageManager.getInstalledPackages ,
+            ApplicationPackageManager.getInstalledApplications ,
+            ApplicationPackageManager.getPackageInfo ,
+            ApplicationPackageManager.getInstallerPackageName ,
+            PackageManager.getInstalledPackages ,
+            PackageManager.getInstalledApplications ,
+            PackageManager.getPackageInfo ,
+            PackageManager.getPackageInfo1 ,
+            PackageManager.getPackageInfo2 ,
+            PackageManager.getPackageInfo3 ,
+            PackageManager.getInstallerPackageName)
+    }
+
     object WifiInfo {
         private val clazz = android.net.wifi.WifiInfo::class.java
+
         @JvmStatic
         val getMacAddress = clazz.getDeclaredMethod("getMacAddress")
+
         @JvmStatic
         val getIpAddress = clazz.getDeclaredMethod("getIpAddress")
     }
 
     object LocationManager {
         private val clazz = android.location.LocationManager::class.java
+
         @JvmStatic
         val getLastKnownLocation = clazz.getDeclaredMethod("getLastKnownLocation" , String::class.java)
+
         @JvmStatic
         val requestLocationUpdates = clazz.getDeclaredMethod("requestLocationUpdates" ,
             String::class.java ,
@@ -56,6 +77,7 @@ object MIITMethods {
 
     object NetworkInterface {
         private val clazz = java.net.NetworkInterface::class.java
+
         @JvmStatic
         val getHardwareAddress = clazz.getDeclaredMethod("getHardwareAddress")
     }
@@ -67,13 +89,17 @@ object MIITMethods {
         } catch (e : Exception) {
             null
         }
+
         @JvmStatic
         val getInstalledPackages = clazz?.getDeclaredMethod("getInstalledPackages" , Int::class.javaPrimitiveType)
+
         @JvmStatic
         val getInstalledApplications =
             clazz?.getDeclaredMethod("getInstalledApplications" , Int::class.javaPrimitiveType)
+
         @JvmStatic
         val getInstallerPackageName = clazz?.getDeclaredMethod("getInstallerPackageName" , String::class.java)
+
         @JvmStatic
         val getPackageInfo =
             clazz?.getDeclaredMethod("getPackageInfo" , String::class.java , Int::class.javaPrimitiveType)
@@ -81,31 +107,42 @@ object MIITMethods {
 
     object PackageManager {
         private val clazz = android.content.pm.PackageManager::class.java
+
         @JvmStatic
         val getInstalledPackages = clazz.getDeclaredMethod("getInstalledPackages" , Int::class.javaPrimitiveType)
+
         @JvmStatic
         val getInstalledApplications =
             clazz.getDeclaredMethod("getInstalledApplications" , Int::class.javaPrimitiveType)
+
         @JvmStatic
         val getInstallerPackageName = clazz.getDeclaredMethod("getInstallerPackageName" , String::class.java)
+
         @JvmStatic
         val getPackageInfo =
             clazz.getDeclaredMethod("getPackageInfo" , String::class.java , Int::class.javaPrimitiveType)
+
         @JvmStatic
         val getPackageInfo1 = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            clazz.getDeclaredMethod("getPackageInfo" , String::class.java , android.content.pm.PackageManager.PackageInfoFlags::class.java)
+            clazz.getDeclaredMethod("getPackageInfo" ,
+                String::class.java ,
+                android.content.pm.PackageManager.PackageInfoFlags::class.java)
         } else {
             null
         }
+
         @JvmStatic
-       val getPackageInfo2 = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-           clazz.getDeclaredMethod("getPackageInfo" , VersionedPackage::class.java ,Int::class.javaPrimitiveType)
-       } else {
-           null
-       }
+        val getPackageInfo2 = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            clazz.getDeclaredMethod("getPackageInfo" , VersionedPackage::class.java , Int::class.javaPrimitiveType)
+        } else {
+            null
+        }
+
         @JvmStatic
         val getPackageInfo3 = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            clazz.getDeclaredMethod("getPackageInfo" , VersionedPackage::class.java, android.content.pm.PackageManager.PackageInfoFlags::class.java)
+            clazz.getDeclaredMethod("getPackageInfo" ,
+                VersionedPackage::class.java ,
+                android.content.pm.PackageManager.PackageInfoFlags::class.java)
         } else {
             null
         }
@@ -113,20 +150,26 @@ object MIITMethods {
 
     object Secure {
         private val clazz = android.provider.Settings.Secure::class.java
+
         @JvmStatic
         val getString = clazz.getDeclaredMethod("getString" , ContentResolver::class.java , String::class.java)
     }
 
     object TelephonyManager {
         private val clazz = android.telephony.TelephonyManager::class.java
+
         @JvmStatic
         val getDeviceId = clazz.getDeclaredMethod("getDeviceId")
+
         @JvmStatic
         val getDeviceIdWithInt = clazz.getDeclaredMethod("getDeviceId" , Int::class.javaPrimitiveType)
+
         @JvmStatic
         val getImei = clazz.getDeclaredMethod("getImei")
+
         @JvmStatic
         val getImeiWithInt = clazz.getDeclaredMethod("getImei" , Int::class.javaPrimitiveType)
+
         @JvmStatic
         val getSubscriberId = clazz.getDeclaredMethod("getSubscriberId")
     }

@@ -3,6 +3,7 @@ package com.loper7.miit_rule_checker
 import android.text.TextUtils
 import android.util.Log
 import top.canyie.pine.Pine
+import java.lang.reflect.Member
 
 /**
  *@Author loper7
@@ -26,16 +27,36 @@ object LogHelper {
         Log.w(TAG , "----------------------${TAG}----------------------")
     }
 
-    fun printMethodCount(map : HashMap<String , HashMap<String , Int>>) {
+    fun printMethodCount(map : HashMap<String , HashMap<String , Int>>?) {
+
         Log.w(TAG , "----------------------${TAG}----------------------")
-        map.forEach {
-            Log.d(TAG , ">>>>>>>>>>> ${it.key}")
-            it.value.forEach { value ->
-                Log.i(TAG , "stackClassName: ${value.key}\tcount: ${value.value}")
+        if (map.isNullOrEmpty()) {
+            Log.i(TAG , "设定时间内指定方法没有被调用")
+        } else {
+            map.forEach {
+                Log.d(TAG , ">>>>>>>>>>> ${it.key}")
+                it.value.forEach { value ->
+                    Log.i(TAG , "stackClassName: ${value.key}\tcount: ${value.value}")
+                }
+                Log.d(TAG , "")
             }
-            Log.d(TAG , "")
         }
         Log.w(TAG , "----------------------${TAG}----------------------")
+    }
+
+    fun getMethodName(callFrame : Pine.CallFrame?) : String {
+        if (callFrame == null) return ""
+        val constructors = callFrame.method.declaringClass.declaredConstructors
+        val name = if (constructors != null && constructors.isNotEmpty()) {
+            try {
+                "${constructors[0].toString().split(" ")[1].split("(")[0]}.${callFrame.method.name}"
+            } catch (e : Exception) {
+                "${constructors[0]}.${callFrame.method.name}"
+            }
+        } else {
+            "${callFrame.method.declaringClass.`package`?.name}.${callFrame.method.name}"
+        }
+        return name
     }
 
     fun getMethodStack() : String {
