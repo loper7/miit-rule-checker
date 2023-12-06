@@ -20,7 +20,7 @@ Step 2. 添加 `Gradle` 依赖
 ```
 dependencies {
     ...
-    implementation 'io.github.loper7:miit-rule-checker:0.1.2'
+    implementation 'io.github.loper7:miit-rule-checker:0.2.0'
 }
 ```
 ## 如何使用
@@ -61,10 +61,10 @@ dependencies {
             add(MIITMethods.LocationManager.requestLocationUpdates)
             add(MIITMethods.Secure.getString)
         }
-  MIITMethodCountChecker.startCount(list , 20 * 1000)
+  MIITMethodCountChecker.startCount( 20 * 1000,list)
   
   //单个方法统计（deadline 为从方法调用开始到多少毫秒后截至统计）
-  MIITMethodCountChecker.startCount(MIITMethods.LocationManager.getLastKnownLocation , deadline = 20 * 1000)
+  MIITMethodCountChecker.startCount(20 * 1000,MIITMethods.LocationManager.getLastKnownLocation)
   ```
   `log`打印如下所示：
   <br/>
