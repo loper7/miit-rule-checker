@@ -2,26 +2,29 @@ package com.loper7.simple
 
 import android.app.Application
 import android.util.Log
-import androidx.compose.material3.SnackbarDuration
 import com.loper7.miit_rule_checker.MIITMethodCountChecker
 import com.loper7.miit_rule_checker.MIITMethods
 import com.loper7.miit_rule_checker.MIITRuleChecker
-import kotlinx.coroutines.launch
+import kotlin.math.log
 
 /**
  *@Author loper7
  *@Date 2023/12/4 10:02
  *@Description
  **/
-class App: Application() {
+class App : Application() {
     override fun onCreate() {
         super.onCreate()
 
 //        MIITRuleChecker.check(MIITMethods.getPackageManagerAll())
-        MIITMethodCountChecker.startCount(MIITMethods.getPackageManagerAll() , 20 * 1000)
+        MIITMethodCountChecker.startCount(20 * 1000 , MIITMethods.getPackageManagerAll())
+
+        for (member in MIITMethods.getDefaultMethods()){
+            Log.e("eachen","name->${member?.name}")
+        }
 
 
         val size = packageManager.getInstalledPackages(0).size
-        Log.e("app","-------------------------${size}")
+        Log.e("app" , "-------------------------${size}")
     }
 }

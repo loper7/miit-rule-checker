@@ -17,6 +17,6 @@ dependencyResolutionManagement {
 }
 
 
-rootProject.name = "miit-rule-checker"
+rootProject.name = "miit-rule-checker-simple"
 include(":app")
 include(":miit_rule_checker")

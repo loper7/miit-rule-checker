@@ -73,7 +73,7 @@ class MainActivity : ComponentActivity() {
         //检查单个方法
 //        MIITRuleChecker.check(MIITMethods.WifiInfo.getMacAddress)
         //检查内置的方法
-//        MIITRuleChecker.checkDefaults()
+        MIITRuleChecker.checkDefaults()
 
 //        val list = MIITMethods.getDefaultMethods()
 //        list.add(MainActivity::class.java.getDeclaredMethod("onCreate" , Bundle::class.java))
@@ -84,8 +84,8 @@ class MainActivity : ComponentActivity() {
             add(MIITMethods.LocationManager.requestLocationUpdates)
             add(MIITMethods.Secure.getString)
         }
-//        MIITMethodCountChecker.startCount(MIITMethods.getPackageManagerAll() , 20 * 1000)
-//        MIITMethodCountChecker.startCount(MIITMethods.LocationManager.getLastKnownLocation , deadline = 20 * 1000)
+//        MIITMethodCountChecker.startCount(20 * 1000 , MIITMethods.getPackageManagerAll())
+//        MIITMethodCountChecker.startCount(20 * 1000 , MIITMethods.LocationManager.getLastKnownLocation)
     }
 }
 
